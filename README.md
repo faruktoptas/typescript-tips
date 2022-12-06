@@ -1,6 +1,6 @@
 
 ## Equality
-== undefined or == null checks whether a value is either null or undefined.
+`== undefined` or `== null` checks whether a value is either null or undefined.
 ```ts
 let a;
 let b = null
@@ -97,7 +97,7 @@ function doSomething(fn: DescribableFunction) {
 
 ```
 
-### Generic constraints
+## Generic constraints
 
 ```ts
 function longest<Type extends { length: number }>(a: Type, b: Type) {
@@ -114,4 +114,38 @@ const longerArray = longest([1, 2], [1, 2, 3]);
 const longerString = longest("alice", "bob");
 // Error! Numbers don't have a 'length' property
 const notOK = longest(10, 100);
+```
+
+## Extensions
+Extending a type
+
+```ts
+declare global {
+    interface Number {
+        thousandsSeperator(): String;
+    }
+
+    interface String {
+        hello(): number
+    }
+}
+Number.prototype.thousandsSeperator = function (): string {
+    return Number(this).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+String.prototype.hello = function (): number {
+    return String(this).length + 100;
+}
+
+export { }; 
+```
+
+`main.ts`
+```ts
+import  './ext'
+
+const nu = 123456;
+console.log(nu.thousandsSeperator()) // 123,456
+console.log("Hello".hello()); // 105
+
 ```
